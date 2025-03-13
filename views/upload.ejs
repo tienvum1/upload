@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Files</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Upload Files</h1>
+    
+    <% if (message) { %>
+      <div class="alert <%= message.includes('Error') ? 'alert-danger' : 'alert-success' %>">
+        <%= message %>
+      </div>
+    <% } %>
+    
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="file">Select a file to upload:</label>
+        <input type="file" id="file" name="file" class="form-control" required>
+      </div>
+      <button type="submit" class="btn">Upload File</button>
+    </form>
+    
+    <% if (locals.file) { %>
+      <div class="file-details">
+        <h2>Uploaded File Details:</h2>
+        <p><strong>Original Name:</strong> <%= file.originalname %></p>
+        <p><strong>Saved As:</strong> <%= file.filename %></p>
+        <p><strong>Size:</strong> <%= (file.size / 1024).toFixed(2) %> KB</p>
+        <p><strong>MIME Type:</strong> <%= file.mimetype %></p>
+      </div>
+    <% } %>
+    
+    <% if (locals.files && files.length > 0) { %>
+      <div class="file-list">
+        <h2>Uploaded Files:</h2>
+        <% files.forEach(function(file) { %>
+          <div class="file-item">
+            <span class="file-name"><%= file.originalName %></span>
+            <div class="file-meta">
+              <span class="file-size"><%= (file.size / 1024).toFixed(2) %> KB</span>
+              <span class="file-date"><%= new Date(file.uploadDate).toLocaleString() %></span>
+            </div>
+            <a href="/download/<%= file.filename %>" class="download-btn">Download</a>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="empty-message">
+        <p>No files have been uploaded yet.</p>
+      </div>
+    <% } %>
+    
+    <a href="/" class="nav-link">← Back to Home</a>
+    <a href="/download" class="nav-link">Go to Downloads →</a>
+  </div>
+</body>
+</html> 
